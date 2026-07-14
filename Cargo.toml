@@ -1,0 +1,11 @@
+[package]
+name = "mako-rs"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cairo-rs = "0.20"
+smithay-client-toolkit = "0.19"
+zbus = "4"
+calloop = "0.14"
+calloop-wayland-source = "0.4"
