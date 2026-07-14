@@ -141,7 +141,7 @@
           '';
         in patched;
       };
-      flake.homeManagerModules.default = { config, lib, pkgs, ... }:
+      flake.homeModules.default = { config, lib, pkgs, ... }:
         let
           cfg = config.programs.mako-rs;
           toRustTuple = list: "(${lib.concatStringsSep ", " (map toString list)})";
