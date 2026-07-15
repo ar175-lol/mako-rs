@@ -55,6 +55,8 @@
             --replace 'const TIMEOUT_LOW_NORMAL: Duration = Duration::from_secs(5);' 'const TIMEOUT_LOW_NORMAL: Duration = Duration::from_secs(${toString timeoutSecs});' \
             --replace 'const EXPIRY_SWEEP_INTERVAL: Duration = Duration::from_millis(100);' 'const EXPIRY_SWEEP_INTERVAL: Duration = Duration::from_millis(${toString sweepMs});'
         '';
+
+        meta.mainProgram = "mako-rs";
       };
     in
     flake-parts.lib.mkFlake { inherit inputs; } {
@@ -145,6 +147,27 @@
         let
           cfg = config.programs.mako-rs;
           toRustTuple = list: "(${lib.concatStringsSep ", " (map toString list)})";
+          package = mkMakoRs pkgs {
+            inherit (cfg)
+              fontFamily
+              fontSize
+              bodyFontSize
+              borderSize
+              padding
+              width
+              minHeight
+              maxBufferHeight
+              maxVisible
+              gap
+              topMargin
+              rightMargin
+              timeoutSecs
+              sweepMs
+              ;
+            bgColor = toRustTuple cfg.bgColor;
+            textColor = toRustTuple cfg.textColor;
+            borderColor = toRustTuple cfg.borderColor;
+          };
         in {
           options.programs.mako-rs = {
             enable = lib.mkEnableOption "mako-rs notification daemon";
@@ -167,29 +190,24 @@
             sweepMs = lib.mkOption { type = lib.types.int; default = 100; };
           };
           config = lib.mkIf cfg.enable {
-            home.packages = [
-              (mkMakoRs pkgs {
-                inherit (cfg)
-                  fontFamily
-                  fontSize
-                  bodyFontSize
-                  borderSize
-                  padding
-                  width
-                  minHeight
-                  maxBufferHeight
-                  maxVisible
-                  gap
-                  topMargin
-                  rightMargin
-                  timeoutSecs
-                  sweepMs
-                ;
-                bgColor = toRustTuple cfg.bgColor;
-                textColor = toRustTuple cfg.textColor;
-                borderColor = toRustTuple cfg.borderColor;
-              })
-            ];
+            home.packages = [ package ];
+
+            systemd.user.services.mako-rs = {
+              Unit = {
+                Description = "mako-rs notification daemon";
+                Documentation = "https://github.com/ar175-lol/mako-rs";
+                PartOf = [ "graphical-session.target" ];
+                After = [ "graphical-session.target" ];
+              };
+              Service = {
+                ExecStart = lib.getExe package;
+                Restart = "on-failure";
+                RestartSec = 2;
+              };
+              Install = {
+                WantedBy = [ "graphical-session.target" ];
+              };
+            };
           };
         };
     };
