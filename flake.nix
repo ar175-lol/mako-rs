@@ -11,7 +11,7 @@
   }:
     let
       mkMakoRs = pkgs: {
-        fontFamily ? "JetBrains Mono",
+        fontFamily ? "JetBrainsMono Nerd Font",
         fontSize ? 12.0,
         bodyFontSize ? 14.0,
         bgColor ? "(0.12, 0.12, 0.18)",
@@ -37,7 +37,7 @@
         buildInputs = [ pkgs.cairo pkgs.wayland pkgs.libxkbcommon ];
         postPatch = ''
           substituteInPlace src/main.rs \
-            --replace 'const FONT_FAMILY: &str = "JetBrains Mono";' 'const FONT_FAMILY: &str = "${fontFamily}";' \
+            --replace 'const FONT_FAMILY: &str = "JetBrainsMono Nerd Font";' 'const FONT_FAMILY: &str = "${fontFamily}";' \
             --replace 'const FONT_SIZE: f64 = 12.0;' 'const FONT_SIZE: f64 = ${toString fontSize};' \
             --replace 'const BODY_FONT_SIZE: f64 = 14.0;' 'const BODY_FONT_SIZE: f64 = ${toString bodyFontSize};' \
             --replace 'const BG_COLOR: (f64, f64, f64) = (0.12, 0.12, 0.18);' 'const BG_COLOR: (f64, f64, f64) = ${bgColor};' \
@@ -91,7 +91,7 @@
             chmod -R u+w src
             cd src
             substituteInPlace src/main.rs \
-              --replace 'const FONT_FAMILY: &str = "JetBrains Mono";' 'const FONT_FAMILY: &str = "${testArgs.fontFamily}";' \
+              --replace 'const FONT_FAMILY: &str = "JetBrainsMono Nerd Font";' 'const FONT_FAMILY: &str = "${testArgs.fontFamily}";' \
               --replace 'const FONT_SIZE: f64 = 12.0;' 'const FONT_SIZE: f64 = ${toString testArgs.fontSize};' \
               --replace 'const BODY_FONT_SIZE: f64 = 14.0;' 'const BODY_FONT_SIZE: f64 = ${toString testArgs.bodyFontSize};' \
               --replace 'const BG_COLOR: (f64, f64, f64) = (0.12, 0.12, 0.18);' 'const BG_COLOR: (f64, f64, f64) = ${testArgs.bgColor};' \
