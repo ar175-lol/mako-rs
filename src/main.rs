@@ -32,7 +32,7 @@ use zbus::blocking::connection::Builder;
 use zbus::interface;
 use zbus::zvariant::Value;
 
-const FONT_FAMILY: &str = "JetBrains Mono";
+const FONT_FAMILY: &str = "JetBrainsMono Nerd Font";
 const FONT_SIZE: f64 = 12.0;
 const BODY_FONT_SIZE: f64 = 14.0;
 const BG_COLOR: (f64, f64, f64) = (0.12, 0.12, 0.18);
